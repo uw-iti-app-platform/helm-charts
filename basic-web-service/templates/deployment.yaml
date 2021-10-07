@@ -71,7 +71,7 @@ metadata:
   name: {{ $appName }}-gcr
   namespace: default  # must be 'default' in MCI, even if app itself is not in default
 spec:
-  image: {{ Values.image.repository }}
+  image: {{ .Values.image.repository }}
   interval: {{ .Values.flux.syncInterval }}
   secretRef:
     name: flux-mci-registry-credential
