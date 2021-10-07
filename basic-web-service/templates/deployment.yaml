@@ -1,0 +1,92 @@
+{{- $appName := include "web-service.fullname" . }}
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $appName }}
+  labels:
+    {{- include "web-service.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      app: {{ $appName }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        app: {{ $appName }}
+        {{- include "web-service.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: {{ $appName }}
+          image: unconfigured  # {"$imagePolicy": "default:{{ $appName }}-policy"}
+          envFrom:
+            - configMapRef:
+                name: {{ $appName }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /status
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /status
+              port: http
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          {{- with .Values.volumeMounts }}
+          volumeMounts:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+      {{- with .Values.volumes }}
+      volumes:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta1
+kind: ImageRepository
+metadata:
+  name: {{ $appName }}-gcr
+  namespace: default  # must be 'default' in MCI, even if app itself is not in default
+spec:
+  image: {{ Values.image.repository }}
+  interval: {{ .Values.flux.syncInterval }}
+  secretRef:
+    name: flux-mci-registry-credential
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta1
+kind: ImagePolicy
+metadata:
+  name: {{ $appName }}-policy
+  namespace: default  # must be 'default' in MCI, even if app itself is not in default
+spec:
+  imageRepositoryRef:
+    name: {{ $appName }}-gcr
+  filterTags:
+    pattern: '^{{ .Values.image.deployPrefix }}\.(?P<ts>[0-9\.]+)\.v.+$'
+    extract: '$ts'
+  policy:
+    alphabetical:
+      order: asc
