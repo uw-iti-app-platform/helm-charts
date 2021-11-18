@@ -25,7 +25,7 @@ spec:
     spec:
       containers:
         - name: {{ $appName }}
-          image: unconfigured  # {"$imagePolicy": "default:{{ $appName }}-policy"}
+          image: {{ .Values.image.repository }}:{{ .Values.image.deploymentTag }}
           envFrom:
             - configMapRef:
                 name: {{ $appName }}
@@ -65,28 +65,11 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
 ---
-apiVersion: image.toolkit.fluxcd.io/v1beta1
-kind: ImageRepository
+apiVersion: v1
+kind: ConfigMap
 metadata:
-  name: {{ $appName }}-gcr
-  namespace: default  # must be 'default' in MCI, even if app itself is not in default
-spec:
-  image: {{ .Values.image.repository }}
-  interval: {{ .Values.flux.syncInterval }}
-  secretRef:
-    name: flux-mci-registry-credential
----
-apiVersion: image.toolkit.fluxcd.io/v1beta1
-kind: ImagePolicy
-metadata:
-  name: {{ $appName }}-policy
-  namespace: default  # must be 'default' in MCI, even if app itself is not in default
-spec:
-  imageRepositoryRef:
-    name: {{ $appName }}-gcr
-  filterTags:
-    pattern: '^{{ .Values.image.deployPrefix }}\.(?P<ts>[0-9\.]+)\.v.+$'
-    extract: '$ts'
-  policy:
-    alphabetical:
-      order: asc
+  name: {{ $appName }}
+  labels:
+    app: {{ $appName }}
+data:
+  {{- toYaml .Values.resources | nindent 4 }}

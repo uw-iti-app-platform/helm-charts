@@ -13,12 +13,14 @@ flux:
 image:
   repository: unconfigured  # e.g., 'gcr.io/aux-project-name/app-name'
   pullPolicy: IfNotPresent
-  deployPrefix: unconfigured  # e.g., 'deploy-dev'
+  deploymentTag: unconfigured
 
 nameOverride: ""
 fullnameOverride: ""
 
 podAnnotations: {}
+
+environmentVariables: {}
 
 service:
   type: ClusterIP
