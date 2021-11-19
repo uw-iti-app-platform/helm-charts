@@ -12,7 +12,7 @@ spec:
   {{- end }}
   selector:
     matchLabels:
-      app: {{ $appName }}
+      {{- include "web-service.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -79,6 +79,6 @@ kind: ConfigMap
 metadata:
   name: {{ $appName }}
   labels:
-    app: {{ $appName }}
+    {{- include "web-service.labels" . | nindent 8 }}
 data:
   {{- toYaml .Values.resources | nindent 4 }}
