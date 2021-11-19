@@ -81,4 +81,4 @@ metadata:
   labels:
     {{- include "web-service.labels" . | nindent 8 }}
 data:
-  {{- toYaml .Values.resources | nindent 4 }}
+  {{- toYaml .Values.environmentVariables | nindent 4 }}
