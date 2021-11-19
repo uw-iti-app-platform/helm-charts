@@ -15,8 +15,15 @@ image:
   pullPolicy: IfNotPresent
   deploymentTag: unconfigured
 
-nameOverride: ""
-fullnameOverride: ""
+ports:
+  # The port exposed on the container to handle http requests.
+  containerHttpPort: 8000
+
+probes:
+  liveness:
+    path: /status
+  readiness:
+    path: /status?ready
 
 podAnnotations: {}
 
