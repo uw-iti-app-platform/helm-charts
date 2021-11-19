@@ -28,7 +28,16 @@ spec:
           image: {{ .Values.image.repository }}:{{ .Values.image.deploymentTag }}
           envFrom:
             - configMapRef:
-                name: {{ $appName }}
+                labels:
+                  {{- include "web-service.selectorLabels" . | nindent 18 }}
+          env:
+            {{- range .Values.environmentSecrets }}
+            - name: {{ .dest }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .secretName }}
+                  key: {{ .key }}
+            {{- end }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http

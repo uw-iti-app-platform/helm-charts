@@ -22,6 +22,17 @@ podAnnotations: {}
 
 environmentVariables: {}
 
+environmentSecrets: {}
+# If you have secrets stored in key-value pairs
+# that you would like to map to environment variables,
+# you can define those here in the following format.
+# (and remove `{}` above):
+#
+#  dest: ENV_VAR_NAME
+#  secretName: name-of-kubernetes-secret
+#  key: someKeyInsideTheSecret
+
+
 service:
   type: ClusterIP
   port: 80
