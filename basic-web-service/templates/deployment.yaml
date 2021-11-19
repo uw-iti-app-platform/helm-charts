@@ -28,8 +28,7 @@ spec:
           image: {{ .Values.image.repository }}:{{ .Values.image.deploymentTag }}
           envFrom:
             - configMapRef:
-                labels:
-                  {{- include "web-service.selectorLabels" . | nindent 18 }}
+                name: {{ $appName }}
           env:
             {{- range .Values.environmentSecrets }}
             - name: {{ .dest }}
