@@ -29,4 +29,5 @@ Selector labels
 */}}
 {{- define "web-service.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "web-service.name" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}

@@ -20,7 +20,6 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        app: {{ $appName }}
         {{- include "web-service.selectorLabels" . | nindent 8 }}
     spec:
       containers:
