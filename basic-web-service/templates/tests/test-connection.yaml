@@ -1,9 +1,9 @@
-{{- $appName := include "web-service.fullname" . }}
+{{- $appName := include "web-service.name" . }}
 
 apiVersion: v1
 kind: Pod
 metadata:
-  name: {{ include "web-service.fullname" . }}-test-connection
+  name: {{ include "web-service.name" . }}-test-connection
   labels:
     {{- include "web-service.labels" . | nindent 4 }}
   annotations:

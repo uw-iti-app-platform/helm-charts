@@ -1,4 +1,4 @@
-{{- $appName := include "web-service.fullname" . }}
+{{- $appName := include "web-service.name" . }}
 
 apiVersion: v1
 kind: Service
