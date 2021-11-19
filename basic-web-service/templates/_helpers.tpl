@@ -30,14 +30,3 @@ Selector labels
 {{- define "web-service.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "web-service.name" . }}
 {{- end }}
-
-{{/*
-Create the name of the service account to use
-*/}}
-{{- define "web-service.serviceAccountName" -}}
-{{- if .Values.serviceAccount.create }}
-{{- default (include "web-service.fullname" .) .Values.serviceAccount.name }}
-{{- else }}
-{{- default "default" .Values.serviceAccount.name }}
-{{- end }}
-{{- end }}
