@@ -24,7 +24,7 @@ spec:
     spec:
       containers:
         - name: {{ $appName }}
-          image: {{ .Values.image.repository }}:{{ .Values.image.deploymentTag }}
+          image: {{ .Values.image.deploymentTag }}
           envFrom:
             - configMapRef:
                 name: {{ $appName }}
