@@ -1,0 +1,95 @@
+# Default values for web-service.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+app:
+  name: ""  # e.g., identity-uw, defaults to .Chart.Name
+
+replicaCount: 1
+
+flux:
+  syncInterval: 5m0s
+
+image:
+  # The deploymentTag must be overridden in the corresponding
+  # HelmRelease for flux; the value itself should also correspond
+  # to an ImagePolicy object that can monitor the given
+  # image repository for updated deployment tags.
+  # An example in the release spec might look like this:
+  #
+  # kind: HelmRelease
+  # spec:
+  #   values:
+  #     image:
+  #       deploymentTag: ghcr.io/uwit-iam/example-flask-app:latest  # {"$imagepolicy": "default:example-app-policy"}
+  deploymentTag: ghcr.io/uwit-iam/example-flask-app:latest
+  pullPolicy: IfNotPresent
+
+ports:
+  # The port exposed on the container to handle http requests.
+  containerHttpPort: 8000
+
+probes:
+  liveness:
+    path: /status
+  readiness:
+    path: /status?ready
+
+podAnnotations: {}
+
+environmentVariables: {}
+
+environmentSecrets: {}
+# If you have secrets stored in key-value pairs
+# that you would like to map to environment variables,
+# you can define those here in the following format.
+# (and remove `{}` above):
+#
+#  dest: ENV_VAR_NAME
+#  secretName: name-of-kubernetes-secret
+#  key: someKeyInsideTheSecret
+
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: false
+  hosts:
+    - host: chart-example.local
+      paths:
+        - path: /
+  tls:
+    - secretName: chart-example-tls
+      hosts:
+        - chart-example.local
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+volumes: {}
+
+volumeMounts: {}

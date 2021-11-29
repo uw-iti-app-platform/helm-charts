@@ -1,0 +1,17 @@
+{{- $appName := include "web-service.name" . }}
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ $appName }}
+  labels:
+    {{- include "web-service.labels" . | nindent 4 }}
+spec:
+  type: ClusterIP
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: {{ .Values.ports.containerHttpPort }}
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "web-service.selectorLabels" . | nindent 4 }}

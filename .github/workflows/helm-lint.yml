@@ -1,0 +1,12 @@
+name: Helm chart linter
+
+on:
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./.github/actions/set-up-helm-linter
+      - run: helm lint basic-web-service
