@@ -10,6 +10,8 @@ spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
+  progressDeadlineSeconds: {{ .Values.deployment.progressDeadlineSeconds }}
+  revisionHistoryLimit: {{ .Values.deployment.revisionHistoryLimit }}
   selector:
     matchLabels:
       {{- include "web-service.selectorLabels" . | nindent 6 }}
@@ -22,6 +24,10 @@ spec:
       labels:
         {{- include "web-service.selectorLabels" . | nindent 8 }}
     spec:
+      {{- with .Values.deployment.strategy }}
+      strategy:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
         - name: {{ $appName }}
           image: {{ .Values.image.deploymentTag }}
@@ -37,6 +43,10 @@ spec:
                   key: {{ .key }}
             {{- end }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          lifecycle:
+            {{- with .Values.deployment.lifecycle }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
           ports:
             - name: http
               containerPort: {{ .Values.ports.containerHttpPort }}
@@ -45,10 +55,14 @@ spec:
             httpGet:
               path: {{ .Values.probes.liveness.path }}
               port: http
+            initialDelaySeconds: {{ .Values.probes.liveness.initialDelaySeconds }}
+            periodSeconds: {{ .Values.probes.liveness.periodSeconds }}
           readinessProbe:
             httpGet:
               path: {{ .Values.probes.readiness.path }}
               port: http
+            initialDelaySeconds: {{ .Values.probes.readiness.initialDelaySeconds }}
+            periodSeconds: {{ .Values.probes.readiness.periodSeconds }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           {{- with .Values.volumeMounts }}
@@ -77,6 +91,6 @@ kind: ConfigMap
 metadata:
   name: {{ $appName }}
   labels:
-    {{- include "web-service.labels" . | nindent 8 }}
+    {{- include "web-service.labels" . | nindent 4 }}
 data:
   {{- toYaml .Values.environmentVariables | nindent 4 }}

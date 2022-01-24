@@ -24,6 +24,8 @@ image:
   #       deploymentTag: ghcr.io/uwit-iam/example-flask-app:latest  # {"$imagepolicy": "default:example-app-policy"}
   deploymentTag: ghcr.io/uwit-iam/example-flask-app:latest
   pullPolicy: IfNotPresent
+  # command line arguments to supply to the docker entrypoint.
+  args: []
 
 ports:
   # The port exposed on the container to handle http requests.
@@ -32,8 +34,13 @@ ports:
 probes:
   liveness:
     path: /status
+    initialDelaySeconds: 10
+    periodSeconds: 30
   readiness:
     path: /status?ready
+    initialDelaySeconds: 60
+    periodSeconds: 60
+
 
 podAnnotations: {}
 
@@ -64,6 +71,21 @@ ingress:
     - secretName: chart-example-tls
       hosts:
         - chart-example.local
+  annotations: {}
+    # Any specialized annotations for your ingress setup can be added by extending
+    # this block.
+    # Example:
+    #   nginx.ingress.kubernetes.io/configuration-snippet: |
+    #     <<Your extra nginx configuration here.>>
+
+deployment:
+  # Strategy configuration will be included as-provided by dependents.
+  strategy: {}
+  # Lifecycle configuration will be included as-provided by dependents.
+  lifecycle: {}
+  progressDeadlineSeconds: 600
+  revisionHistoryLimit: 10
+
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
