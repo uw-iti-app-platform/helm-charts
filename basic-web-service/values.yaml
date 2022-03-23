@@ -34,13 +34,18 @@ ports:
 probes:
   liveness:
     path: /status
-    initialDelaySeconds: 10
+    failureThreshold: 3
+    initialDelaySeconds: 30
     periodSeconds: 30
+    successThreshold: 1
+    timeoutSeconds: 3
   readiness:
     path: /status?ready
-    initialDelaySeconds: 60
-    periodSeconds: 60
-
+    failureThreshold: 3
+    initialDelaySeconds: 30
+    periodSeconds: 30
+    successThreshold: 1
+    timeoutSeconds: 3
 
 podAnnotations: {}
 
