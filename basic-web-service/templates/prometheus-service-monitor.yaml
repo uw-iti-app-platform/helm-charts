@@ -5,12 +5,12 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: {{ $appName }}
-  namespace: default
+  labels:
+    {{- include "web-service.labels" . | nindent 4 }}
 spec:
   selector:
     matchLabels:
-      namespace: default
-      app.kubernetes.io/name: {{ $appName }}
+      {{- include "web-service.labels" . | nindent 6}}
   endpoints:
     - port: http
       {{- with .Values.prometheusServiceMonitor.basicAuth }}
