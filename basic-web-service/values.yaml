@@ -47,6 +47,22 @@ probes:
 
 podAnnotations: {}
 
+prometheusServiceMonitor:
+  enabled: false
+  # To enable auth (recommended!), dependent apps would need to include
+  # a map to the secret username and password, such as:
+  # basicAuth:
+  #   username:
+  #     name: <secret_name>   # e.g., 'prom-servicemanager-secrets'
+  #     key: <config_json_key>  # e.g., 'username'
+  #   password:
+  #     name: <secret_name>
+  #     key: <config_json_key>  # e.g., 'password'
+  #
+  # in this case, the `prom-servicemanager-secrets` secret would need to be
+  # json in the form of: "{username: 'promUserName', password: 'promP@55w0rd!'}"
+  basicAuth: {}
+
 environmentVariables: {}
 
 environmentSecrets: {}
