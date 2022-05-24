@@ -1,0 +1,20 @@
+{{- if .Values.prometheusServiceMonitor.enabled }}
+{{- $appName := include "web-service.name" . }}
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ $appName }}
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      namespace: default
+      app.kubernetes.io/name: {{ $appName }}
+  endpoints:
+    - port: http
+      {{- with .Values.prometheusServiceMonitor.basicAuth }}
+      basicAuth:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}
