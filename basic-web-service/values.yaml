@@ -82,6 +82,7 @@ service:
 
 ingress:
   enabled: false
+  annotations: {}
   hosts:
     - host: chart-example.local
       paths:
