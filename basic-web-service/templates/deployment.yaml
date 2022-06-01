@@ -41,6 +41,7 @@ spec:
             - name: http
               containerPort: {{ .Values.ports.containerHttpPort }}
               protocol: TCP
+          {{- if .Values.probes.liveness.enabled }}
           livenessProbe:
             httpGet:
               path: {{ .Values.probes.liveness.path }}
@@ -50,6 +51,7 @@ spec:
             periodSeconds: {{ .Values.probes.liveness.periodSeconds }}
             successThreshold: {{ .Values.probes.liveness.successThreshold }}
             timeoutSeconds: {{ .Values.probes.liveness.timeoutSeconds }}
+          {{- end}}
           readinessProbe:
             httpGet:
               path: {{ .Values.probes.readiness.path }}
