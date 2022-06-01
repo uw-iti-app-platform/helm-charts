@@ -83,10 +83,12 @@ service:
 ingress:
   enabled: false
   annotations: {}
+  manageCertificates: true
   hosts: []
     #- host: chart-example.local
     #  paths:
     #    - path: /
+    #    - pathType: ImplementationSpecific (default is "Prefix")
   tls: []
     #- secretName: chart-example-tls
     #  hosts:
