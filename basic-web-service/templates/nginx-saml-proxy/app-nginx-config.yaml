@@ -1,0 +1,44 @@
+{{- if .Values.ingress.saml.enabled }}
+{{- $appName := include "web-service.name" . }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ $appName }}-nginx-configmap
+  namespace: default
+  labels:
+    app: {{ $appName }}
+data:
+  server.conf: |
+    proxy_cache_path /my_cache levels=1:2 keys_zone=my_cache:10m max_size=100m
+                 inactive=128m use_temp_path=off;
+
+    server {
+      location = /status {
+        # pass directly through only for exact /status match
+        proxy_pass http://localhost:5000/;
+      }
+
+      location / {
+        {{- if .Values.ingress.saml.gws_group_id }}
+        auth_request /saml/status/group/{{ .Values.ingress.saml.gws_group_id }};
+        {{- end }}
+        error_page 401 = @login_required;
+        proxy_cache my_cache;
+        proxy_cache_valid 200 60m;
+        proxy_cache_valid 404 10m;
+        proxy_pass http://localhost:5000/;
+      }
+
+      location /saml/ {
+        proxy_set_header Host $http_host;
+        proxy_set_header X-Forwarded-Proto https;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Prefix /saml/;
+        proxy_pass http://nginx-saml-proxy/;
+      }
+
+      location @login_required {
+        return 302 https://$http_host/saml/login$request_uri;
+      }
+    }
+{{- end}}
