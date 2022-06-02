@@ -67,13 +67,22 @@ spec:
           {{- end }}  # end with .Values.probes
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-          {{- with .Values.volumeMounts }}
           volumeMounts:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
-      {{- with .Values.volumes }}
+            {{- with .Values.volumeMounts }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
+            {{-if .Values.ingress.saml.enabled }}
+            - name: {{ $appName }}-nginx-config-volume
+              mountPath: /etc/nginx/conf.d
+            {{- end}}
       volumes:
+      {{- with .Values.volumes }}
         {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if .Values.ingress.saml.enabled }}
+        - name: {{ $appName }}-nginx-config-volume
+          configMap:
+            name: {{ $appName }}-nginx-configmap
       {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:

@@ -34,7 +34,7 @@ data:
         proxy_set_header X-Forwarded-Proto https;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Prefix /saml/;
-        proxy_pass http://nginx-saml-proxy/;
+        proxy_pass {{ .Values.ingress.saml.proxy_host }}/;
       }
 
       location @login_required {
