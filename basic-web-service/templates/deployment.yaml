@@ -41,35 +41,48 @@ spec:
             - name: http
               containerPort: {{ .Values.ports.containerHttpPort }}
               protocol: TCP
-          {{- if .Values.probes.liveness.enabled }}
+          {{- with .Values.probes }}
+          {{- if .liveness.enabled }}
           livenessProbe:
             httpGet:
-              path: {{ .Values.probes.liveness.path }}
+              path: {{ .liveness.path | .path  | default "/" }}
               port: http
-            failureThreshold: {{ .Values.probes.liveness.failureThreshold }}
-            initialDelaySeconds: {{ .Values.probes.liveness.initialDelaySeconds }}
-            periodSeconds: {{ .Values.probes.liveness.periodSeconds }}
-            successThreshold: {{ .Values.probes.liveness.successThreshold }}
-            timeoutSeconds: {{ .Values.probes.liveness.timeoutSeconds }}
+            failureThreshold: {{ .liveness.failureThreshold }}
+            initialDelaySeconds: {{ .liveness.initialDelaySeconds }}
+            periodSeconds: {{ .liveness.periodSeconds }}
+            successThreshold: {{ .liveness.successThreshold }}
+            timeoutSeconds: {{ .liveness.timeoutSeconds }}
           {{- end}}
+          {{- if .readiness.enabled }}
           readinessProbe:
             httpGet:
-              path: {{ .Values.probes.readiness.path }}
+              path: {{ .readiness.path | .path | default "/" }}
               port: http
-            failureThreshold: {{ .Values.probes.readiness.failureThreshold }}
-            initialDelaySeconds: {{ .Values.probes.readiness.initialDelaySeconds }}
-            periodSeconds: {{ .Values.probes.readiness.periodSeconds }}
-            successThreshold: {{ .Values.probes.readiness.successThreshold }}
-            timeoutSeconds: {{ .Values.probes.readiness.timeoutSeconds }}
+            failureThreshold: {{ .readiness.failureThreshold }}
+            initialDelaySeconds: {{ .readiness.initialDelaySeconds }}
+            periodSeconds: {{ .readiness.periodSeconds }}
+            successThreshold: {{ .readiness.successThreshold }}
+            timeoutSeconds: {{ .readiness.timeoutSeconds }}
+          {{- end }}  # end readinessProbe
+          {{- end }}  # end with .Values.probes
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-          {{- with .Values.volumeMounts }}
           volumeMounts:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
-      {{- with .Values.volumes }}
+            {{- with .Values.volumeMounts }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
+            {{- if .Values.ingress.saml.enabled }}
+            - name: {{ $appName }}-nginx-config-volume
+              mountPath: /etc/nginx/conf.d
+            {{- end}}
       volumes:
+      {{- with .Values.volumes }}
         {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if .Values.ingress.saml.enabled }}
+        - name: {{ $appName }}-nginx-config-volume
+          configMap:
+            name: {{ $appName }}-nginx-configmap
       {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:

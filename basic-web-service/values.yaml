@@ -30,15 +30,18 @@ ports:
   containerHttpPort: 8000
 
 probes:
+  path: /status
   liveness:
-    path: /status
+    query_string: ~  # Set if needed for your application
+    path: ~  # Will default to the root 'path'
     failureThreshold: 3
     initialDelaySeconds: 30
     periodSeconds: 30
     successThreshold: 1
     timeoutSeconds: 3
   readiness:
-    path: /status?ready
+    query_string: '?ready'  # Override if needed or nullify with ~
+    path: ~  # Will default to the root 'path'
     failureThreshold: 3
     initialDelaySeconds: 30
     periodSeconds: 30
@@ -81,18 +84,37 @@ service:
   port: 80
 
 ingress:
+  # If disabled (default), you must provide your own
+  # ingress configuration. This is meant to allow apps with
+  # non-comformant ingresses to migrate to the helm chart in stages.
   enabled: false
   annotations: {}
+  # Toggle this to false to disable automated letsencrypt cert rotation
   manageCertificates: true
   hosts: []
     #- host: chart-example.local
     #  paths:
     #    - path: /
     #    - pathType: ImplementationSpecific (default is "Prefix")
-  tls: []
-    #- secretName: chart-example-tls
-    #  hosts:
-    #    - chart-example.local
+  tls:
+    enabled: false
+    entries: []
+      #- secretName: chart-example-tls
+      #  hosts:
+      #    - chart-example.local
+  saml:
+    # If you enable saml integration, it is assumed that you
+    # already have an nginx-saml-ingress integration set up
+    # in your cluster.
+    enabled: false
+    # Fill in the id of the groups.uw.edu group that you
+    # want to use to authenticate to your service.
+    # ALL groups that you intend to use with this template
+    # must be added as requested attributes. If you leave
+    # this blank, _ANY_ logged in user will be able
+    # to access your application. If that
+    gws_group_id: ~
+    proxy_host: http://nginx-saml-proxy
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
@@ -119,6 +141,9 @@ tolerations: []
 
 affinity: {}
 
+# If ingress.saml.enabled is set to `true`,
+# then an nginx volume and volumeMount entry
+# will be added; you do not need to define them.
 volumes: {}
 
 volumeMounts: {}
