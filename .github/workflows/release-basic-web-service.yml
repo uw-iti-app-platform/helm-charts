@@ -1,4 +1,4 @@
-name: Publish new helm chart to repository
+name: Publish new version of `basic-web-service` helm chart to repository
 on:
   release:
     types:
@@ -8,13 +8,14 @@ on:
 
 jobs:
   publish-chart:
-    runs-on: alpine/helm:3.9.0
-    concurrency: {{ github.repository }}
+    runs-on: ubuntu-latest
+    concurrency: ${{ github.repository }}
     steps:
       - uses: actions/checkout@v1
+      - uses: azure/setup-helm@v1
       - uses: uwit-iam/actions/configure-gcloud-docker@0.1.13
-      - run: |
-          echo "::set-output name=access-token::"
+        with:
+          gcloud-token: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
       - name: Authenticate to the helm registry
         run: >
           cat "${GOOGLE_APPLICATION_CREDENTIALS}"
@@ -36,4 +37,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           path: ${{ steps.package.outputs.artifact }}
-        if-no-files-found: error
+          if-no-files-found: error
