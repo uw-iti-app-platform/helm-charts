@@ -45,7 +45,7 @@ spec:
           {{- if .liveness.enabled }}
           livenessProbe:
             httpGet:
-              path: {{ .liveness.path | .path }}
+              path: {{ .liveness.path | .path  | default "/" }}
               port: http
             failureThreshold: {{ .liveness.failureThreshold }}
             initialDelaySeconds: {{ .liveness.initialDelaySeconds }}
@@ -56,7 +56,7 @@ spec:
           {{- if .readiness.enabled }}
           readinessProbe:
             httpGet:
-              path: {{ .readiness.path | .path | "/" }}
+              path: {{ .readiness.path | .path | default "/" }}
               port: http
             failureThreshold: {{ .readiness.failureThreshold }}
             initialDelaySeconds: {{ .readiness.initialDelaySeconds }}
@@ -71,7 +71,7 @@ spec:
             {{- with .Values.volumeMounts }}
               {{- toYaml . | nindent 12 }}
             {{- end }}
-            {{-if .Values.ingress.saml.enabled }}
+            {{- if .Values.ingress.saml.enabled }}
             - name: {{ $appName }}-nginx-config-volume
               mountPath: /etc/nginx/conf.d
             {{- end}}
