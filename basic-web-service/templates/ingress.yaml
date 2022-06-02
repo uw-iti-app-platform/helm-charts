@@ -32,14 +32,15 @@ spec:
   rules:
     {{- if $domain }}
     - host: {{ $appName }}.{{ $domain }}
-      paths:
-      - path: '/'
-        pathType: Prefix
-        backend:
-          service:
-            name: {{ $appName }}
-          port:
-            number: {{ $svcPort }}
+      http:
+        paths:
+          - path: '/'
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ $appName }}
+              port:
+                number: {{ $svcPort }}
     {{- end }}
     {{- range .Values.ingress.hosts }}
     - host: {{ .host | quote }}
