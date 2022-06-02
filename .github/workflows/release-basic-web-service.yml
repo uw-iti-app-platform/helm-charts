@@ -1,0 +1,39 @@
+name: Publish new helm chart to repository
+on:
+  release:
+    types:
+      - published
+  workflow_dispatch:
+    # Allow this workflow to be triggered from the Github UI
+
+jobs:
+  publish-chart:
+    runs-on: alpine/helm:3.9.0
+    concurrency: {{ github.repository }}
+    steps:
+      - uses: actions/checkout@v1
+      - uses: uwit-iam/actions/configure-gcloud-docker@0.1.13
+      - run: |
+          echo "::set-output name=access-token::"
+      - name: Authenticate to the helm registry
+        run: >
+          cat "${GOOGLE_APPLICATION_CREDENTIALS}"
+          | helm registry login
+          -u _json_key --password-stdin https://us-west1-docker.pkg.dev
+      - name: Package helm release
+        run: |
+          output=$(helm package basic-web-service)
+          filename=$(echo $output | cut -f2 -d: | sed 's| ||g')
+          echo "::set-output name=artifact::${filename}"
+          echo "::notice::Created pacakged chart ${filename}"
+        id: package
+      - name: Publish packaged release
+        env:
+          repo_url: oci://us-west1-docker.pkg.dev/uwit-mci-iam/helm-charts
+        run: |
+          helm push ${{ steps.package.outputs.artifact }} ${{ env.repo_url }}
+      - name: Upload workflow artifact
+        uses: actions/upload-artifact@v3
+        with:
+          path: ${{ steps.package.outputs.artifact }}
+        if-no-files-found: error
