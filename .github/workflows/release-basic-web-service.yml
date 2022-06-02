@@ -2,7 +2,7 @@ name: Publish new helm chart to repository
 on:
   release:
     types:
-      - published
+      - created
   workflow_dispatch:
     # Allow this workflow to be triggered from the Github UI
 
