@@ -4,6 +4,7 @@
 
 app:
   name: ""  # e.g., identity-uw, defaults to .Chart.Name
+  clusterDomain: ~  # e.g., iamdev.s.uw.edu
 
 replicaCount: 1
 
@@ -30,8 +31,9 @@ ports:
   containerHttpPort: 8000
 
 probes:
-  path: /status
+  path: '/status'
   liveness:
+    enabled: true
     query_string: ~  # Set if needed for your application
     path: ~  # Will default to the root 'path'
     failureThreshold: 3
@@ -40,6 +42,7 @@ probes:
     successThreshold: 1
     timeoutSeconds: 3
   readiness:
+    enabled: true
     query_string: '?ready'  # Override if needed or nullify with ~
     path: ~  # Will default to the root 'path'
     failureThreshold: 3
@@ -147,3 +150,9 @@ affinity: {}
 volumes: {}
 
 volumeMounts: {}
+
+# Some applications need the support of additional containers.
+# Those can be configured here; although, if they are complex enough,
+# consider figuring out how to decouple things to the degree that your
+# container is simply a configured application itself.
+supportingContainers: []
