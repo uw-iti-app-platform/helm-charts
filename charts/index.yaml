@@ -2,17 +2,17 @@ apiVersion: v1
 entries:
   basic-web-service:
   - apiVersion: v2
-    created: "2022-06-03T13:16:01.419882-07:00"
+    created: "2022-06-03T13:37:44.871102-07:00"
     description: 'A Helm chart for a basic web application that can deploy on a UW-IT
       Managed Container Infrastructure cluster. '
-    digest: e8e56c6319fea2e7a5dc643264e03c886612406724edcb35ff3bc67fcfd5fefd
+    digest: 1fa1666cc539b210e8a886867b4826288534da48f1b23fcd5a92b7c3a4afd36c
     name: basic-web-service
     type: application
     urls:
     - basic-web-service-0.2.3.tgz
     version: 0.2.3
   - apiVersion: v2
-    created: "2022-06-03T13:16:01.419388-07:00"
+    created: "2022-06-03T13:37:44.870548-07:00"
     description: 'A Helm chart for a basic web application that can deploy on a UW-IT
       Managed Container Infrastructure cluster. '
     digest: 9c51a11a863d1d431826a0ef035004b7559ea037dc4b10df672ffda258bc989e
@@ -21,4 +21,4 @@ entries:
     urls:
     - basic-web-service-0.2.2.tgz
     version: 0.2.2
-generated: "2022-06-03T13:16:01.418541-07:00"
+generated: "2022-06-03T13:37:44.869756-07:00"
