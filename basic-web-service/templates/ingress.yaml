@@ -1,3 +1,4 @@
+{{- if .Values.ingress.enabled }}
 {{- $appName := include "web-service.name" . }}
 {{- $svcPort := .Values.service.port -}}
 {{- $domain := .Values.app.clusterDomain }}
@@ -56,3 +57,4 @@ spec:
                   number: {{ $svcPort }}
           {{- end }}
     {{- end }}
+{{- end }}
