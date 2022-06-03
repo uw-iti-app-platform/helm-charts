@@ -31,3 +31,41 @@ Selector labels
 app.kubernetes.io/name: {{ include "web-service.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
+
+{{/*
+Configures probe paths
+*/}}
+{{- define "web-service.probesEnabled" -}}
+{{- default .Values.probes.liveness.enabled .Values.probes.readiness.enabled }}
+{{- end }}
+
+{{- define "web-service.livenessProbePath" -}}
+{{- $rawPath := default .Values.probes.path .Values.probes.liveness.path | trim -}}
+{{- $fakeUrl := printf "http://example.com%s" $rawPath -}}
+{{- with urlParse $fakeUrl -}}
+{{- .path -}}
+{{- end }}
+{{- end }}
+
+{{- define "web-service.readinessProbePath" -}}
+{{- $rawPath := default .Values.probes.path .Values.probes.readiness.path | trim -}}
+{{- $fakeUrl := printf "http://example.com%s" $rawPath -}}
+{{- with urlParse $fakeUrl -}}
+{{- .path -}}
+{{- end }}
+{{- end }}
+
+{{/*
+Write probe paths in nginx syntax so that they can be inserted into,
+saml-proxy configurations as holes in the proxy,
+allowing probes to get through.
+*/}}
+{{- define "web-service.probeNginxLocations" }}
+{{- $livenessPath := include "web-service.livenessProbePath" . -}}
+{{- $readinessPath := include "web-service.readinessProbePath" . -}}
+{{- if eq $livenessPath $readinessPath -}}
+    {{- cat "=" $livenessPath }}
+{{- else -}}
+    {{- printf "(%s|%s)" $livenessPath $readinessPath | cat "~" -}}
+{{- end -}}
+{{- end -}}

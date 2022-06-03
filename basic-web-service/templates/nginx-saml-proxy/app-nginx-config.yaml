@@ -1,5 +1,6 @@
-{{- if .Values.ingress.saml.enabled }}
-{{- $appName := include "web-service.name" . }}
+{{- if .Values.ingress.saml.enabled -}}
+{{- $appName := include "web-service.name" . -}}
+{{- $probeLocations := include "web-service.probeNginxLocations" . -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -13,10 +14,11 @@ data:
                  inactive=128m use_temp_path=off;
 
     server {
-      location = /status {
-        # pass directly through only for exact /status match
+      {{- if include "web-service.probesEnabled" . }}
+      location {{ $probeLocations }} {
         proxy_pass http://localhost:5000/;
       }
+      {{- end }}
 
       location / {
         {{- if .Values.ingress.saml.gws_group_id }}
