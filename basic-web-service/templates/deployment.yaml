@@ -78,11 +78,20 @@ spec:
         {{- with .Values.supportingContainers }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
+        {{- if .Values.ingress.enabled && .Values.ingress.saml.enabled }}
+        - name: {{ $appName }}-nginx
+          image: nginx
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: {{ $appName }}-nginx-config-volume
+              mountPath: /etc/nginx/conf.d
+        {{- end}}
       volumes:
       {{- with .Values.volumes }}
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- if .Values.ingress.saml.enabled }}
+      {{- if .Values.ingress.enabled && .Values.ingress.saml.enabled }}
         - name: {{ $appName }}-nginx-config-volume
           configMap:
             name: {{ $appName }}-nginx-configmap
