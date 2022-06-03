@@ -28,6 +28,7 @@ jobs:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
   publish-gar-chart:
+    if: false
     runs-on: alpine/helm:3.9.0
     concurrency:
       group: ${{ github.repository }}-gar
