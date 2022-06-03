@@ -10,7 +10,7 @@ jobs:
   publish-pages-chart:
     runs-on: ubuntu-latest
     concurrency:
-      group: {{ github.repository }}-pages
+      group: ${{ github.repository }}-pages
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -30,7 +30,7 @@ jobs:
   publish-gar-chart:
     runs-on: alpine/helm:3.9.0
     concurrency:
-      group: {{ github.repository }}-gar
+      group: ${{ github.repository }}-gar
     steps:
       - uses: actions/checkout@v1
       - uses: uwit-iam/actions/configure-gcloud-docker@0.1.13
