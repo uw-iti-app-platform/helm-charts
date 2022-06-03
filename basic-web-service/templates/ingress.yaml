@@ -39,8 +39,8 @@ spec:
             backend:
               service:
                 name: {{ $appName }}
-              port:
-                number: {{ $svcPort }}
+                port:
+                  number: {{ $svcPort }}
     {{- end }}
     {{- range .Values.ingress.hosts }}
     - host: {{ .host | quote }}
