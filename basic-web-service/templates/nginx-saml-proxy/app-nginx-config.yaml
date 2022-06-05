@@ -1,6 +1,7 @@
 {{- if .Values.ingress.saml.enabled -}}
 {{- $appName := include "web-service.name" . -}}
 {{- $probeLocations := include "web-service.probeNginxLocations" . -}}
+{{- $proxyPassHost := printf "http://localhost:%d/" .Values.ports.containerPort }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -14,21 +15,23 @@ data:
                  inactive=128m use_temp_path=off;
 
     server {
+      listen {{ .Values.service.port }};
+
       {{- if include "web-service.probesEnabled" . }}
       location {{ $probeLocations }} {
-        proxy_pass http://localhost:5000/;
+        proxy_pass {{ $proxyPassHost }}
       }
       {{- end }}
 
       location / {
-        {{- if .Values.ingress.saml.gws_group_id }}
-        auth_request /saml/status/group/{{ .Values.ingress.saml.gws_group_id }};
+        {{- if .Values.ingress.saml.gwsGroupId }}
+        auth_request /saml/status/group/{{ .Values.ingress.saml.gwsGroupId }};
         {{- end }}
         error_page 401 = @login_required;
         proxy_cache my_cache;
         proxy_cache_valid 200 60m;
         proxy_cache_valid 404 10m;
-        proxy_pass http://localhost:5000/;
+        proxy_pass {{ $proxyPassHost }}
       }
 
       location /saml/ {
@@ -36,7 +39,7 @@ data:
         proxy_set_header X-Forwarded-Proto https;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Prefix /saml/;
-        proxy_pass {{ .Values.ingress.saml.proxy_host }}/;
+        proxy_pass {{ .Values.ingress.saml.proxyHost }}/;
       }
 
       location @login_required {

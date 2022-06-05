@@ -34,7 +34,7 @@ probes:
   path: '/status'
   liveness:
     enabled: true
-    query_string: ~  # Set if needed for your application
+    queryString: ~  # Set if needed for your application
     path: ~  # Will default to the root 'path'
     failureThreshold: 3
     initialDelaySeconds: 30
@@ -43,7 +43,7 @@ probes:
     timeoutSeconds: 3
   readiness:
     enabled: true
-    query_string: '?ready'  # Override if needed or nullify with ~
+    queryString: '?ready'  # Override if needed or nullify with ~
     path: ~  # Will default to the root 'path'
     failureThreshold: 3
     initialDelaySeconds: 30
@@ -116,8 +116,8 @@ ingress:
     # must be added as requested attributes. If you leave
     # this blank, _ANY_ logged in user will be able
     # to access your application. If that
-    gws_group_id: ~
-    proxy_host: http://nginx-saml-proxy
+    gwsGroupId: ~
+    proxyHost: http://nginx-saml-proxy
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
