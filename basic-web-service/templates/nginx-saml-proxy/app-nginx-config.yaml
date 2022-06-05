@@ -19,7 +19,7 @@ data:
 
       {{- if include "web-service.probesEnabled" . }}
       location {{ $probeLocations }} {
-        proxy_pass {{ $proxyPassHost }}
+        proxy_pass {{ $proxyPassHost }};
       }
       {{- end }}
 
