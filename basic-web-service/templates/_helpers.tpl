@@ -64,7 +64,7 @@ allowing probes to get through.
 {{- $livenessPath := include "web-service.livenessProbePath" . -}}
 {{- $readinessPath := include "web-service.readinessProbePath" . -}}
 {{- if eq $livenessPath $readinessPath -}}
-    {{- cat "=" $livenessPath }}
+    {{- $livenessPath }}
 {{- else -}}
     {{- printf "(%s|%s)" $livenessPath $readinessPath | cat "~" -}}
 {{- end -}}
