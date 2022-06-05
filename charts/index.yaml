@@ -2,7 +2,17 @@ apiVersion: v1
 entries:
   basic-web-service:
   - apiVersion: v2
-    created: "2022-06-05T15:25:38.264383-07:00"
+    created: "2022-06-05T15:31:51.802996-07:00"
+    description: 'A Helm chart for a basic web application that can deploy on a UW-IT
+      Managed Container Infrastructure cluster. '
+    digest: ad19c723de9b806b248094cd4ce09e4950ad09a6240289acf0a492bb725a15aa
+    name: basic-web-service
+    type: application
+    urls:
+    - basic-web-service-0.2.11.tgz
+    version: 0.2.11
+  - apiVersion: v2
+    created: "2022-06-05T15:31:51.802489-07:00"
     description: 'A Helm chart for a basic web application that can deploy on a UW-IT
       Managed Container Infrastructure cluster. '
     digest: 298bdf381395bfac8f5b942b0ce1575921cbdb5b8aeaabbe7abcc8bbd68c73bd
@@ -12,7 +22,7 @@ entries:
     - basic-web-service-0.2.10.tgz
     version: 0.2.10
   - apiVersion: v2
-    created: "2022-06-05T15:25:38.269188-07:00"
+    created: "2022-06-05T15:31:51.808709-07:00"
     description: 'A Helm chart for a basic web application that can deploy on a UW-IT
       Managed Container Infrastructure cluster. '
     digest: d16146493536ff9e40ad3529b8f99cb0659f64408ef9fc6d29cc73ffe529c267
@@ -22,7 +32,7 @@ entries:
     - basic-web-service-0.2.9.tgz
     version: 0.2.9
   - apiVersion: v2
-    created: "2022-06-05T15:25:38.268675-07:00"
+    created: "2022-06-05T15:31:51.808204-07:00"
     description: 'A Helm chart for a basic web application that can deploy on a UW-IT
       Managed Container Infrastructure cluster. '
     digest: e1ce325e5aa1c1543fe0f6de9a821461329f6639c46852779caefd31e57e3690
@@ -32,7 +42,7 @@ entries:
     - basic-web-service-0.2.8.tgz
     version: 0.2.8
   - apiVersion: v2
-    created: "2022-06-05T15:25:38.268161-07:00"
+    created: "2022-06-05T15:31:51.807675-07:00"
     description: 'A Helm chart for a basic web application that can deploy on a UW-IT
       Managed Container Infrastructure cluster. '
     digest: 02cc4372317c262ac2b02437973129aef0f42594f71c15276bcdcacef0054be7
@@ -42,7 +52,7 @@ entries:
     - basic-web-service-0.2.7.tgz
     version: 0.2.7
   - apiVersion: v2
-    created: "2022-06-05T15:25:38.266986-07:00"
+    created: "2022-06-05T15:31:51.806983-07:00"
     description: 'A Helm chart for a basic web application that can deploy on a UW-IT
       Managed Container Infrastructure cluster. '
     digest: 33f40e7f1add3fc9ad8e4dc672a2c4f1832dd3bba90a6dec77d8da3ee383bc2a
@@ -52,7 +62,7 @@ entries:
     - basic-web-service-0.2.6.tgz
     version: 0.2.6
   - apiVersion: v2
-    created: "2022-06-05T15:25:38.266448-07:00"
+    created: "2022-06-05T15:31:51.805948-07:00"
     description: 'A Helm chart for a basic web application that can deploy on a UW-IT
       Managed Container Infrastructure cluster. '
     digest: 25665fc9b03602c10a523589dbc852c5bf6ef40864e538dc668d12896970f927
@@ -62,7 +72,7 @@ entries:
     - basic-web-service-0.2.5.tgz
     version: 0.2.5
   - apiVersion: v2
-    created: "2022-06-05T15:25:38.265945-07:00"
+    created: "2022-06-05T15:31:51.804493-07:00"
     description: 'A Helm chart for a basic web application that can deploy on a UW-IT
       Managed Container Infrastructure cluster. '
     digest: 7c8aeea21514ff4d1c406691f863c0068c12f3833f2c8baad5213d20f75a2cd9
@@ -72,7 +82,7 @@ entries:
     - basic-web-service-0.2.4.tgz
     version: 0.2.4
   - apiVersion: v2
-    created: "2022-06-05T15:25:38.265447-07:00"
+    created: "2022-06-05T15:31:51.80403-07:00"
     description: 'A Helm chart for a basic web application that can deploy on a UW-IT
       Managed Container Infrastructure cluster. '
     digest: 1fa1666cc539b210e8a886867b4826288534da48f1b23fcd5a92b7c3a4afd36c
@@ -82,7 +92,7 @@ entries:
     - basic-web-service-0.2.3.tgz
     version: 0.2.3
   - apiVersion: v2
-    created: "2022-06-05T15:25:38.26491-07:00"
+    created: "2022-06-05T15:31:51.80352-07:00"
     description: 'A Helm chart for a basic web application that can deploy on a UW-IT
       Managed Container Infrastructure cluster. '
     digest: 9c51a11a863d1d431826a0ef035004b7559ea037dc4b10df672ffda258bc989e
@@ -91,4 +101,4 @@ entries:
     urls:
     - basic-web-service-0.2.2.tgz
     version: 0.2.2
-generated: "2022-06-05T15:25:38.263556-07:00"
+generated: "2022-06-05T15:31:51.801566-07:00"
