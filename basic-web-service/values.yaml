@@ -28,6 +28,7 @@ image:
 
 ports:
   # The port exposed on the container to handle http requests.
+  # Service ports connect to container ports.
   containerHttpPort: 8000
 
 probes:
@@ -85,6 +86,7 @@ environmentSecrets: {}
 service:
   type: ClusterIP
   port: 80
+  targetPort: ~
 
 ingress:
   # If disabled (default), you must provide your own
