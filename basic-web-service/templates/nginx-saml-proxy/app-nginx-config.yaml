@@ -28,8 +28,8 @@ data:
       location / {
         {{- if .Values.ingress.saml.gwsGroupId }}
         auth_request /saml/status/group/{{ .Values.ingress.saml.gwsGroupId }};
-        {{- else }}
-        auth_request /saml/login
+        {{- else -}}
+        auth_request /saml/login;
         {{- end }}
         auth_request_set $auth_user $upstream_http_x_saml_user;
         error_page 401 = @login_required;
