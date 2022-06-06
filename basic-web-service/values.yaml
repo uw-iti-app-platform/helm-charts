@@ -119,6 +119,8 @@ ingress:
     # this blank, _ANY_ logged in user will be able
     # to access your application. If that
     gwsGroupId: ~
+    entityId: ~
+    acs: /saml/login
     proxyHost: http://nginx-saml-proxy
 
 resources: {}
