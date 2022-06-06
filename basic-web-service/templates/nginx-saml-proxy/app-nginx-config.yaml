@@ -26,17 +26,19 @@ data:
       {{- end }}
 
       location / {
-        auth_request_set $auth_user $upstream_http_x_saml_user;
-        auth_request_set $auth_redirect $upstream_http_location;
         {{- if .Values.ingress.saml.gwsGroupId }}
         auth_request /saml/status/group/{{ .Values.ingress.saml.gwsGroupId }};
         {{- else }}
         auth_request /saml/status;
         {{- end }}
+        auth_request_set $auth_user $upstream_http_x_saml_user;
+        auth_request_set $auth_groups $upstream_http_x_saml_groups;
         error_page 401 = @login_required;
         proxy_cache my_cache;
         proxy_cache_valid 200 60m;
         proxy_cache_valid 404 10m;
+        proxy_set_header X-Forwarded-User $auth_user;
+        proxy_set_header X-Forwarded-Groups $auth_groups;
         proxy_pass {{ $proxyPassHost }};
       }
 
