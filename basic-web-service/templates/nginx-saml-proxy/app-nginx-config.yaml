@@ -26,12 +26,13 @@ data:
       {{- end }}
 
       location / {
+        auth_request_set $auth_user $upstream_http_x_saml_user;
+        auth_request_set $auth_redirect $upstream_http_location;
         {{- if .Values.ingress.saml.gwsGroupId }}
         auth_request /saml/status/group/{{ .Values.ingress.saml.gwsGroupId }};
         {{- else }}
         auth_request /saml/status;
         {{- end }}
-        auth_request_set $auth_user $upstream_http_x_saml_user;
         error_page 401 = @login_required;
         proxy_cache my_cache;
         proxy_cache_valid 200 60m;
@@ -49,10 +50,18 @@ data:
         {{- end }}
         proxy_set_header X-Saml-Acs {{ .Values.ingress.saml.acs }};
         proxy_pass {{ .Values.ingress.saml.proxyHost }}/;
+        recursive_error_pages on;
+        error_page 301 302 303 307 308 @handle_redirect;
+      }
+
+      location @handle_redirect {
+        set $redirect_url $upstream_http_location;
+        proxy_pass $redirect_url;
       }
 
       location @login_required {
         return 302 https://$http_host/saml/login$request_uri;
       }
     }
+
 {{- end}}
