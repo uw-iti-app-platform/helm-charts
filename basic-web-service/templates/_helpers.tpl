@@ -69,3 +69,19 @@ allowing probes to get through.
     {{- printf "(%s|%s)" $livenessPath $readinessPath | cat "~" -}}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Define the application URL if a clusterDomain was provided.
+*/}}
+{{- define "web-service.appHost" }}
+{{- if .Values.app.clusterDomain }}
+{{- $appName := include "web-service.name" . }}
+{{- $domain := .Values.app.appSubdomain | default $appName }}
+{{- printf "%v.%v" $domain .Values.app.clusterDomain }}
+{{- end }}
+{{- end }}
+
+{{- define "web-service.defaultTlsSecretName" }}
+{{- $appName := include "web-service.name" . }}
+{{- printf "%v-managed-tls" $appName }}
+{{- end }}

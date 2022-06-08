@@ -93,20 +93,18 @@ ingress:
   # ingress configuration. This is meant to allow apps with
   # non-comformant ingresses to migrate to the helm chart in stages.
   enabled: false
+  tls: false
   annotations: {}
-  # Toggle this to false to disable automated letsencrypt cert rotation
-  manageCertificates: true
+  # All host entries are optional. If none are provided, a default
+  # entry is created based on the example below, as long as app.clusterDomain is
+  # defined.
   hosts: []
-    #- host: chart-example.local
-    #  paths:
-    #    - path: /
-    #    - pathType: ImplementationSpecific (default is "Prefix")
-  tls:
-    enabled: false
-    entries: []
-      #- secretName: chart-example-tls
-      #  hosts:
-      #    - chart-example.local
+    # - host: foo.cluster.s.uw.edu  # <appName>.<clusterDomain>
+    #   tls: ~  (true|false, default is to inherit from .Values.ingress.tls)
+    #   path: /  # (default)
+    #   pathType: Prefix # (default)
+    #   serviceName: ~ (default is generated service name)
+    #   servicePort: ~ (default is service.port)
   saml:
     # If you enable saml integration, it is assumed that you
     # already have an nginx-saml-ingress integration set up
@@ -122,6 +120,12 @@ ingress:
     entityId: ~
     acs: /saml/login
     proxyHost: http://nginx-saml-proxy
+    # List all paths that should be protected by proxy. By default, all paths
+    # are protected except for the /saml/ path which is reserved for proxying,
+    # and any probes configured. You can override to add explicitly protected
+    # paths under entryPoints.
+    entryPoints:
+      - '/'
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious

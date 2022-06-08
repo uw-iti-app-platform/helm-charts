@@ -1,7 +1,8 @@
-{{- if .Values.ingress.enabled }}
-{{- $appName := include "web-service.name" . }}
-{{- $svcPort := .Values.service.port -}}
-{{- $domain := .Values.app.clusterDomain }}
+{{- if .Values.ingress.enabled -}}
+{{- $svcPort := .Values.service.port }}
+{{- $tlsEnabled := .Values.ingress.tls }}
+{{- $appHost := include "web-service.appHost" . }}
+{{- $tlsSecretName := include "web-service.defaultTlsSecretName" . }}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -10,51 +11,51 @@ metadata:
     {{- include "web-service.labels" . | nindent 4 }}
   annotations:
     kubernetes.io/ingress.class: nginx
-    {{- if .Values.ingress.tls.enabled }}
+    {{- if $tlsEnabled }}
     cert-manager.io/cluster-issuer: letsencrypt
-    {{- end}}
-    {{- with .Values.ingress.annotations }}
+    {{- end }}
+    {{- with .Values.ingress.annotations -}}
       {{- toYaml . | nindent 4 }}
-    {{- end}}
+    {{- end }}
 spec:
-  {{- if .Values.ingress.tls.enabled }}
-  {{- with .Values.ingress.tls }}
+  {{- if $tlsEnabled }}
   tls:
     - hosts:
-      {{- if $domain }}
-      - {{ $appName }}.{{ $domain }}
+      {{- if .Values.ingress.hosts }}
+      {{- range .Values.ingress.hosts }}
+      {{- if .tls | default true }}
+      - {{ .host | quote }}
       {{- end }}
-      {{- range .hosts }}
-      - {{ . | quote }}
+      {{- end -}}
+      {{- else -}}
+      - {{ $appHost }}
       {{- end }}
-      secretName: {{ $appName }}-managed-tls
-  {{- end }}
+      secretName: {{ $tlsSecretName }}
   {{- end }}
   rules:
-    {{- if $domain }}
-    - host: {{ $appName }}.{{ $domain }}
-      http:
-        paths:
-          - path: '/'
+    {{- if .Values.ingress.hosts }}
+      {{- range .Values.ingress.hosts }}
+      - host: {{ .host }}
+        http:
+          paths:
+            - path: {{ .path | default "/" | quote }}
+              pathType: {{ .pathType | default "Prefix" | quote }}
+              backend:
+                service:
+                  name: {{ .service | default $appName }}
+                  port:
+                    number: {{ .port | default $svcPort }}
+      {{- end -}}
+    {{- else -}}
+      - host: {{ $appHost }}
+        http:
+          paths:
+            path: "/"
             pathType: Prefix
             backend:
               service:
                 name: {{ $appName }}
                 port:
                   number: {{ $svcPort }}
-    {{- end }}
-    {{- range .Values.ingress.hosts }}
-    - host: {{ .host | quote }}
-      http:
-        paths:
-          {{- range .paths }}
-          - path: {{ .path }}
-            pathType: {{ .pathType | default "Prefix" }}
-            backend:
-              service:
-                name: {{ $appName }}
-                port:
-                  number: {{ $svcPort }}
-          {{- end }}
-    {{- end }}
-{{- end }}
+    {{- end -}}
+{{- end -}}
