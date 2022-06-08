@@ -3,6 +3,8 @@
 {{- $tlsEnabled := .Values.ingress.tls }}
 {{- $appHost := include "web-service.appHost" . }}
 {{- $tlsSecretName := include "web-service.defaultTlsSecretName" . }}
+{{- $appName := include "web-service.name" . }}
+
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
