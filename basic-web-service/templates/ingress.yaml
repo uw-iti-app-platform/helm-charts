@@ -16,7 +16,7 @@ metadata:
     {{- if $tlsEnabled }}
     cert-manager.io/cluster-issuer: letsencrypt
     {{- end }}
-    {{- with .Values.ingress.annotations -}}
+    {{- with .Values.ingress.annotations }}
       {{- toYaml . | nindent 4 }}
     {{- end }}
 spec:
@@ -29,7 +29,7 @@ spec:
       - {{ .host | quote }}
       {{- end }}
       {{- end -}}
-      {{- else -}}
+      {{- else }}
       - {{ $appHost }}
       {{- end }}
       secretName: {{ $tlsSecretName }}
@@ -47,8 +47,8 @@ spec:
                   name: {{ .service | default $appName }}
                   port:
                     number: {{ .port | default $svcPort }}
-      {{- end -}}
-    {{- else -}}
+      {{- end }}
+    {{- else }}
       - host: {{ $appHost }}
         http:
           paths:
