@@ -52,12 +52,12 @@ spec:
       - host: {{ $appHost }}
         http:
           paths:
-            path: "/"
-            pathType: Prefix
-            backend:
-              service:
-                name: {{ $appName }}
-                port:
-                  number: {{ $svcPort }}
+            - path: "/"
+              pathType: Prefix
+              backend:
+                service:
+                  name: {{ $appName }}
+                  port:
+                    number: {{ $svcPort }}
     {{- end -}}
 {{- end -}}
