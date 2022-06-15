@@ -11,6 +11,11 @@ metadata:
   labels:
     {{- include "web-service.labels" . | nindent 4 }}
 data:
+  proxy.conf: |
+    proxy_set_header Host $host:$server_port;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+
   server.conf: |
     proxy_cache_path /my_cache levels=1:2 keys_zone=my_cache:10m max_size=100m
                  inactive=128m use_temp_path=off;
@@ -20,8 +25,8 @@ data:
 
       {{- if include "web-service.probesEnabled" . }}
       location {{ $probeLocations }} {
-        proxy_set_header Host $host;
         proxy_pass {{ $proxyPassHost }};
+        include /etc/nginx/conf.d/proxy.conf;
       }
       {{- end }}
 
@@ -39,10 +44,10 @@ data:
         proxy_cache my_cache;
         proxy_cache_valid 200 60m;
         proxy_cache_valid 404 10m;
-        proxy_set_header Host $host;
         proxy_set_header X-Forwarded-User $auth_user;
         proxy_set_header X-Forwarded-Groups $auth_groups;
         proxy_pass {{ $proxyPassHost }};
+        include /etc/nginx/conf.d/proxy.conf;
       }
       {{- end }}
 
