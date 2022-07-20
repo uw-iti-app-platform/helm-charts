@@ -1,0 +1,33 @@
+{{- $appName := include "web-service.name" . }}
+{{- with .Values.image }}
+{{- if .enabled }}
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta1
+kind: ImagePolicy
+metadata:
+  name: {{ $appName }}-policy
+  namespace: default # must be 'default' in MCI, even if app itself is not in default
+spec:
+  imageRepositoryRef:
+    name: {{ $appName }}-gcr
+  filterTags:
+    # Matches pattern "deploy-{{ .automation.stage }}.2021.11.16.12.15.v1.2.3"
+    # Sorts on extraction "2021.11.16.12.15"
+    pattern: '^deploy-{{ .automation.stage }}.(?P<ts>[0-9\.]+)\.v.+$'
+    extract: '$ts'
+  policy:
+    alphabetical:
+      order: asc
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta1
+kind: ImageRepository
+metadata:
+  name: {{ $appName }}-gcr
+  namespace: default # must be 'default' in MCI, even if app itself is not in default
+spec:
+  image: {{ .name }}
+  interval: {{ .automation.syncInterval }}
+  secretRef:
+    name: flux-mci-registry-credential
+{{- end -}}
+{{- end -}}
