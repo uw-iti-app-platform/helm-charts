@@ -11,20 +11,30 @@ replicaCount: 1
 flux:
   syncInterval: 5m0s
 
+vaultSecrets:
+  tenant: "" # tenant name, e.g., 'iam' or 'iti'
+  enabled: true
+  # secrets:
+  #  - name: my-secret
+  #    source: eval/foo/bar/shh
+  secrets: []
+
 image:
-  # The deploymentTag must be overridden in the corresponding
-  # HelmRelease for flux; the value itself should also correspond
-  # to an ImagePolicy object that can monitor the given
-  # image repository for updated deployment tags.
-  # An example in the release spec might look like this:
-  #
-  # kind: HelmRelease
-  # spec:
-  #   values:
-  #     image:
-  #       deploymentTag: ghcr.io/uwit-iam/example-flask-app:latest  # {"$imagepolicy": "default:example-app-policy"}
-  deploymentTag: ghcr.io/uwit-iam/example-flask-app:latest
+  name: ghcr.io/uwit-iam/example-flask-app
+  tag: latest
+  deploymentTag: ~  # Deprecated, but kept for backward compatibility with v<=0.3.0
   pullPolicy: IfNotPresent
+  automation:
+    # If enabled (default), will automatically deploy
+    # tags that match the format.
+    # deploy-{{ stage }}-{{timestamp}}.v{{ semver }}
+    # Example:
+    #   ghcr.io/uwit-iam/example-flask-app:deploy-dev.2022.01.30.12.55.v1.2.3
+    # To make use of this, however,
+    # consumers will need to add the policy template to their helm-release.yml:
+    enabled: false
+    stage: dev
+    syncInterval: 1m0s
 
 ports:
   # The port exposed on the container to handle http requests.
