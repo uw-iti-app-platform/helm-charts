@@ -1,6 +1,6 @@
 {{- $appName := include "web-service.name" . }}
 {{- with .Values.image }}
-{{- if .enabled }}
+{{- if .automation.enabled }}
 ---
 apiVersion: image.toolkit.fluxcd.io/v1beta1
 kind: ImagePolicy
