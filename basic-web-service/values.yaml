@@ -24,8 +24,6 @@ image:
   tag: latest
   deploymentTag: ~  # Deprecated, but kept for backward compatibility with v<=0.3.0
   pullPolicy: IfNotPresent
-  repository:
-    syncInterval: 1m0s
 
 ports:
   # The port exposed on the container to handle http requests.
