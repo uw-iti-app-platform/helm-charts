@@ -24,16 +24,7 @@ image:
   tag: latest
   deploymentTag: ~  # Deprecated, but kept for backward compatibility with v<=0.3.0
   pullPolicy: IfNotPresent
-  automation:
-    # If enabled (default), will automatically deploy
-    # tags that match the format.
-    # deploy-{{ stage }}-{{timestamp}}.v{{ semver }}
-    # Example:
-    #   ghcr.io/uwit-iam/example-flask-app:deploy-dev.2022.01.30.12.55.v1.2.3
-    # To make use of this, however,
-    # consumers will need to add the policy template to their helm-release.yml:
-    enabled: false
-    stage: dev
+  repository:
     syncInterval: 1m0s
 
 ports:
