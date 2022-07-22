@@ -4,22 +4,17 @@
 
 ### Packaging your change
 
-This is not currently automated and should be done
-before a PR until automation is set up.
-
-```
-helm package basic-web-service -d charts
-helm repo index charts
-```
+You can use the included `./package-chart.sh` script which invokes
+the `helm` CLI to package your change. You must have the `helm` CLI installed.
 
 ### Publishing your change
 
-This is only automated after the push to `gh-pages`.
+This is not automated currently. 
 
 ```
 git fetch
 git switch gh-pages
-git rebase main
+git rebase origin/main
 git push 
 ```
 
