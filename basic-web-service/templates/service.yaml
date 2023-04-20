@@ -1,11 +1,5 @@
 {{- $appName := include "web-service.name" . }}
-# Set the defaultTargetPort to
-# - service.port              (default: 80) IFF ingress.saml.enabled
-#                             nginx-saml-wrapper is configured to listen on this port
-# - ports.containerHttpPort   (e.g., 5000 for flask)
-#                             the application is expected to listen on this port
 {{- $defaultTargetPort := ternary .Values.service.port .Values.ports.containerHttpPort .Values.ingress.saml.enabled -}}
-# set targetPort, probably getting getting the default value
 {{- $targetPort := .Values.service.targetPort | default $defaultTargetPort -}}
 
 apiVersion: v1
@@ -18,6 +12,12 @@ spec:
   type: ClusterIP
   ports:
     - port: {{ .Values.service.port }}
+      # Set the defaultTargetPort to
+      # - service.port              (default: 80) IFF ingress.saml.enabled
+      #                             nginx-saml-wrapper is configured to listen on this port
+      # - ports.containerHttpPort   (e.g., 5000 for flask)
+      #                             the application is expected to listen on this port
+      # Then set targetPort, probably getting getting the default value
       targetPort: {{ $targetPort }}
       protocol: TCP
       name: http
