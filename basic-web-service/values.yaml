@@ -106,8 +106,8 @@ ingress:
     #   tls: ~  (true|false, default is to inherit from .Values.ingress.tls)
     #   path: /  # (default)
     #   pathType: Prefix # (default)
-    #   serviceName: ~ (default is generated service name)
-    #   servicePort: ~ (default is service.port)
+    #   service: ~ (default is generated service name)
+    #   port: ~ (default is service.port)
   saml:
     # If you enable saml integration, it is assumed that you
     # already have an nginx-saml-ingress integration set up
