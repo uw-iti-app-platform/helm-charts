@@ -9,7 +9,7 @@ the `helm` CLI to package your change. You must have the `helm` CLI installed.
 
 ### Publishing your change
 
-This is not automated currently.
+This is not automated currently. It appears to be based off of [this medium article](https://medium.com/@mattiaperi/create-a-public-helm-chart-repository-with-github-pages-49b180dbb417)
 
 ```
 git fetch
