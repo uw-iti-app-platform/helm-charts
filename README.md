@@ -9,7 +9,9 @@ the `helm` CLI to package your change. You must have the `helm` CLI installed.
 
 ### Publishing your change
 
-This is not automated currently. It appears to be based off of [this medium article](https://medium.com/@mattiaperi/create-a-public-helm-chart-repository-with-github-pages-49b180dbb417)
+A Github Action automatically publishes new charts, so the below steps will not need to be run manually unless something goes wrong. The action is configured to on every push to `main` (this includes merged PRs) if `Chart.yaml` has been modified.
+
+It appears to be based off of [this medium article](https://medium.com/@mattiaperi/create-a-public-helm-chart-repository-with-github-pages-49b180dbb417)
 
 ```
 git fetch
