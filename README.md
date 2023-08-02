@@ -1,3 +1,7 @@
+# This repository is no longer maintained. Please use https://github.com/UWIT-IAM/helm-charts
+
+
+
 # helm-charts
 
 ## Releasing a change to your chart
